@@ -3,24 +3,29 @@
 // Vpetrov. Петров Василий Александрович. 
 // 
 // 2017
+
+using System;
+using System.Collections;
+using Assets.Scripts.Appearance;
+using UnityEngine;
+
 namespace Assets.Scripts.Weapons
 {
-	public class Stick : IWeapon
+	public class Stick : Weapon
 	{
-		public float Damage { get; private set; }
-		public float Cooldown { get; private set; }
-		public string SpriteName { get; private set; }
-
-		public Stick()
+		public Stick(GameObject owner) : base(owner)
 		{
-			SpriteName = "Stick1";
 			Damage = 5;
-			Cooldown = 2;
+			Speed = 1;
+			Position = new Vector2(0.15f, 0);
+			SpriteName = "Stick1";
+			VisualAppearance = new LeftRightMouseAppearance();
 		}
 
-		public void Attack()
+		public override void Attack()
 		{
-			throw new System.NotImplementedException();
+			Debug.DrawRay(GameObject.transform.position,
+				GameObject.transform.right, Color.green);
 		}
 	}
 }

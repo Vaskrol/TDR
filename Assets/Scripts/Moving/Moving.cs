@@ -5,8 +5,10 @@
 // 2017
 namespace Assets.Scripts.Moving
 {
-	public interface IMoving
+	public abstract class Moving
 	{
-		void Process();
+		public float Speed { get; set; }
+
+		public abstract void Process();
 	}
 }
