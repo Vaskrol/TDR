@@ -4,8 +4,6 @@
 // 
 // 2017
 
-using System;
-using System.Collections;
 using Assets.Scripts.Appearance;
 using UnityEngine;
 
@@ -17,15 +15,34 @@ namespace Assets.Scripts.Weapons
 		{
 			Damage = 5;
 			Speed = 1;
-			Position = new Vector2(0.15f, 0);
+			Distance = 0.5f;
+			Position = new Vector3(0.15f, 0, 0);
+			DamageType = DamageType.MeleeImpact;
 			SpriteName = "Stick1";
+			AnimatorName = "SwordAnimator";
 			VisualAppearance = new LeftRightMouseAppearance();
 		}
 
 		public override void Attack()
 		{
-			Debug.DrawRay(GameObject.transform.position,
-				GameObject.transform.right, Color.green);
+			PlayAttackAnim();
+
+			var hitDir = WeaponGameObject.transform.right * Distance;
+			if (VisualAppearance.CurrentFacing ==
+			    VisualAppearance.Facing.Left)
+				hitDir *= -1;
+
+			Debug.DrawRay(WeaponGameObject.transform.position,
+				hitDir, Color.green);
+
+			var hit = Physics2D.Raycast(WeaponGameObject.transform.position, hitDir);
+			if (hit.transform == null) return;
+			var hitAttackable =
+				hit.transform.gameObject.GetComponent<IAttackable>();
+			if (hitAttackable != null)
+			{
+				hitAttackable.ReceiveDamage(Damage, DamageType);
+			}
 		}
 	}
 }

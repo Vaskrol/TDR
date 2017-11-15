@@ -10,6 +10,8 @@ namespace Assets.Scripts.Appearance
 {
 	public abstract class VisualAppearance
 	{
+		public Facing CurrentFacing = Facing.Right;
+
 		public abstract void Process(GameObject go);
 
 		// Flips SpriteRenderer component of gameobject by X axis
@@ -22,14 +24,11 @@ namespace Assets.Scripts.Appearance
 			if (go.transform.root == go.transform)
 				return;
 
-			go.transform.localPosition =
-			new Vector3(
-				-go.transform.localPosition.x,
-				go.transform.localPosition.y,
-				go.transform.localPosition.z);
+			var newPos = Vector3.Scale(go.transform.localPosition, new Vector3(-1, 1f, 1f));
+			go.transform.localPosition = newPos;
 		}
 
-		protected enum Facing
+		public enum Facing
 		{
 			Left,
 			Right

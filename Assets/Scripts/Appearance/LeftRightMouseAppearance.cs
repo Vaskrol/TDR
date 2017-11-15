@@ -10,19 +10,17 @@ namespace Assets.Scripts.Appearance
 {
 	public class LeftRightMouseAppearance : VisualAppearance
 	{
-		private Facing _facing = Facing.Right;
-
 		public override void Process(GameObject go)
 		{
 			var mouseAim = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			if (mouseAim.x < go.transform.position.x && _facing == Facing.Right)
+			if (mouseAim.x < go.transform.position.x && CurrentFacing == Facing.Right)
 			{
-				_facing = Facing.Left;
+				CurrentFacing = Facing.Left;
 				FlipVisual(go);
 			}
-			else if (mouseAim.x > go.transform.position.x && _facing == Facing.Left)
+			else if (mouseAim.x > go.transform.position.x && CurrentFacing == Facing.Left)
 			{
-				_facing = Facing.Right;
+				CurrentFacing = Facing.Right;
 				FlipVisual(go);
 			}
 		}
