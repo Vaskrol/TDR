@@ -16,8 +16,9 @@ public class PlayerController : MonoBehaviour, IAttackable
 	void Start()
 	{
 		HP = 20;
+		Speed = 5;
 
-		_moving = new BasicPlayerMoving(gameObject, 5f);
+		_moving = new BasicPlayerMoving(gameObject, Speed);
 		_weapon = new Stick(gameObject);
 		_weapon.Create();
 		_visualAppearance = new LeftRightMouseAppearance();
@@ -30,8 +31,7 @@ public class PlayerController : MonoBehaviour, IAttackable
 		_visualAppearance.Process(gameObject);
 		_weapon.ProcessVisual();
 
-		if (Input.GetMouseButtonDown(0))
-			_weapon.Attack();
+		if (Input.GetMouseButtonDown(0)) _weapon.Attack();
 	}
 
 

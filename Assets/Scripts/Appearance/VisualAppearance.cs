@@ -17,15 +17,14 @@ namespace Assets.Scripts.Appearance
 		// Flips SpriteRenderer component of gameobject by X axis
 		protected void FlipVisual(GameObject go)
 		{
-			go.GetComponent<SpriteRenderer>().flipX =
-				!go.GetComponent<SpriteRenderer>().flipX;
+			// Flip horizontally
+			go.transform.localScale = Vector3.Scale(go.transform.localScale, new Vector3(-1, 1f, 1f));
 
-			// If this object in the root (has no relative coords), e.g. Player 
 			if (go.transform.root == go.transform)
 				return;
 
-			var newPos = Vector3.Scale(go.transform.localPosition, new Vector3(-1, 1f, 1f));
-			go.transform.localPosition = newPos;
+			// Invert child objects local X position 
+			go.transform.localPosition = Vector3.Scale(go.transform.localPosition, new Vector3(-1, 1f, 1f));
 		}
 
 		public enum Facing
