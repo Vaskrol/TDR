@@ -24,10 +24,10 @@ namespace Assets.Scripts.MapSystem
 
 		#region Properties
 
-		public string  GetName { get { return _name; }}
-		public MapSize GetMapSize { get { return _mapSize; }}
-		public int     GetWidth { get { return _width; }}
-		public int     GetHeight { get { return _height; }}
+		public string  GetName       { get { return _name; }}
+		public MapSize GetMapSize    { get { return _mapSize; }}
+		public int     GetWidth      { get { return _width; }}
+		public int     GetHeight     { get { return _height; }}
 		public int     GetLayerCount { get { return _layers.Count; } }
 
 		#endregion
