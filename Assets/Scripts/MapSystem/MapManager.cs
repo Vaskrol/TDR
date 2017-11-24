@@ -1,4 +1,5 @@
 ﻿using System;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -32,14 +33,14 @@ public class MapManager : MonoBehaviour
 		{
 			for (var x = 0; x < SizeX; x++)
 			{
-				SetTileToUvMap(uvs, new Vector2Int(x, y), new Vector2Int(0, 0));
+				SetTileToUvMap(ref uvs, new Vector2Int(x, y), new Vector2Int(0, 0));
 			}
 		}
 		mesh.uv = uvs;
 	}
 
 	private void SetTileToUvMap(
-		Vector2[] uvs, 
+		ref Vector2[] uvs, 
 		Vector2Int point, 
 		Vector2Int tile)
 	{
@@ -58,12 +59,20 @@ public class MapManager : MonoBehaviour
 		var e = b + 2;
 		var f = a + 2;
 
-		uvs[a] = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
-		uvs[b] = new Vector2(tile.x / (float)textureAtlasSize, (tile.y + 1)/ (float)textureAtlasSize);
-		uvs[c] = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
+		var aVal = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
+		var bVal = new Vector2(tile.x / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
+		var cVal = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
+		var dVal = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
+		var eVal = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
+		var fVal = new Vector2((tile.x + 1) / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
 
-		uvs[d] = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
-		uvs[e] = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
-		uvs[f] = new Vector2((tile.x + 1) / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
+
+		uvs[a] = aVal;
+		uvs[b] = bVal;
+		uvs[c] = cVal;
+
+		uvs[d] = dVal;
+		uvs[e] = eVal;
+		uvs[f] = fVal;
 	}
 }
