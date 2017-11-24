@@ -1,6 +1,4 @@
-﻿
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -17,67 +15,55 @@ public class MapManager : MonoBehaviour
 		BuildMesh();
 	}
 	
-	private void BuildMesh()
+	public void BuildMesh()
 	{
-		var mesh           = GetFlatMesh(SizeX, SizeY, TileSize);
-		var meshFilter     = GetComponent<MeshFilter>();
-		meshFilter.mesh    = mesh;
+		var mesh        = MeshBuilder.GetFlatMesh(SizeX, SizeY, TileSize);
+		var meshFilter  = GetComponent<MeshFilter>();
+		meshFilter.mesh	= null;
 
-		Debug.Log("Mesh done.");
+		GenerateMapTexture(mesh);
+		meshFilter.sharedMesh = mesh;
+	}
+	
+	private void GenerateMapTexture(Mesh mesh)
+	{
+		var uvs = new Vector2[SizeX * 3 * SizeY * 3];
+		for (var y = 0; y < SizeY; y++)
+		{
+			for (var x = 0; x < SizeX; x++)
+			{
+				SetTileToUvMap(uvs, new Vector2Int(x, y), new Vector2Int(0, 0));
+			}
+		}
+		mesh.uv = uvs;
 	}
 
-	private Mesh GetFlatMesh(int sizeX, int sizeY, float tileSize)
+	private void SetTileToUvMap(
+		Vector2[] uvs, 
+		Vector2Int point, 
+		Vector2Int tile)
 	{
-		int numTiles      = sizeX * sizeY;
-		int numTriangles  = numTiles * 2;
-		int verticesSizeX = sizeX + 1;
-		int verticesSizeY = sizeY + 1;
-		int numVertices   = verticesSizeX * verticesSizeY;
+		int textureAtlasSize = 32;
+		int verticesSizeX = SizeX * 3;
+		
+		if (tile.x >= textureAtlasSize || tile.y >= textureAtlasSize)
+			throw new ArgumentOutOfRangeException(
+				"Tile position is out of bounds.");
 
-		// Mesh data
-		var vertices      = new Vector3[numVertices];
-		var normals       = new Vector3[numVertices];
-		var uvs           = new Vector2[numVertices];
-		var triangles     = new int[numTriangles * 3]; // Triangle described as three vertex numbers
+		//Point indeces
+		var a = verticesSizeX * 2*point.y + 3*point.x;
+		var b = a + verticesSizeX;
+		var c = b + 1;
+		var d = a + 1;
+		var e = b + 2;
+		var f = a + 2;
 
-		// Generate mesh data
-		// Verts, normals, uvs
-		for (var y = 0; y < verticesSizeY; y++)
-		{
-			for (var x = 0; x < verticesSizeX; x++)
-			{
-				vertices[verticesSizeX * y + x] = new Vector3(x * tileSize, y * tileSize, 0);
-				normals[verticesSizeX * y + x]  = Vector3.back;
-				uvs[verticesSizeX * y + x]      = new Vector2((float)x / verticesSizeX, (float)y / verticesSizeY);
-			}
-		}
+		uvs[a] = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
+		uvs[b] = new Vector2(tile.x / (float)textureAtlasSize, (tile.y + 1)/ (float)textureAtlasSize);
+		uvs[c] = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
 
-		// Triangles, foreach square (pair of triangles)
-		for (var y = 0; y < sizeY; y++)
-		{
-			for (var x = 0; x < sizeX; x++)
-			{
-				int squareNum = sizeX * y + x;
-				int triangleOffset = squareNum * 6;
-				triangles[triangleOffset]     = verticesSizeX * y + x;
-				triangles[triangleOffset + 1] = verticesSizeX * y + x + verticesSizeX;
-				triangles[triangleOffset + 2] = verticesSizeX * y + x + verticesSizeX + 1;
-
-				triangles[triangleOffset + 3] = verticesSizeX * y + x;
-				triangles[triangleOffset + 4] = verticesSizeX * y + x + verticesSizeX + 1;
-				triangles[triangleOffset + 5] = verticesSizeX * y + x + 1;
-			}
-		}
-
-		// Create mesh and populate it with data
-		var mesh = new Mesh
-		{
-			vertices  = vertices,
-			triangles = triangles,
-			normals   = normals,
-			uv        = uvs
-		};
-
-		return mesh;
+		uvs[d] = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
+		uvs[e] = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
+		uvs[f] = new Vector2((tile.x + 1) / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
 	}
 }
