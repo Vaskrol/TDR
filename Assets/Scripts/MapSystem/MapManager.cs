@@ -41,31 +41,35 @@ public class MapManager : MonoBehaviour
 
 	private void SetTileToUvMap(
 		ref Vector2[] uvs, 
-		Vector2Int point, 
-		Vector2Int tile)
+		Vector2Int meshPoint, 
+		Vector2Int tilePosition)
 	{
 		int textureAtlasSize = 32;
 		int verticesSizeX = SizeX * 3;
 		
-		if (tile.x >= textureAtlasSize || tile.y >= textureAtlasSize)
+		if (tilePosition.x >= textureAtlasSize || tilePosition.y >= textureAtlasSize)
 			throw new ArgumentOutOfRangeException(
 				"Tile position is out of bounds.");
 
 		//Point indeces
-		var a = verticesSizeX * 2*point.y + 3*point.x;
+		var a = verticesSizeX * 2*meshPoint.y + 3*meshPoint.x;
 		var b = a + verticesSizeX;
 		var c = b + 1;
 		var d = a + 1;
 		var e = b + 2;
 		var f = a + 2;
 
-		var aVal = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
-		var bVal = new Vector2(tile.x / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
-		var cVal = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
-		var dVal = new Vector2(tile.x / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
-		var eVal = new Vector2((tile.x + 1) / (float)textureAtlasSize, (tile.y + 1) / (float)textureAtlasSize);
-		var fVal = new Vector2((tile.x + 1) / (float)textureAtlasSize, tile.y / (float)textureAtlasSize);
+		var left   = tilePosition.x       / (float) textureAtlasSize;
+		var right  = (tilePosition.x + 1) / (float) textureAtlasSize;
+		var bottom = (tilePosition.y + 1) / (float) textureAtlasSize;
+		var top    = tilePosition.y       / (float) textureAtlasSize;
 
+		var aVal = new Vector2(left,	top);
+		var bVal = new Vector2(left,	bottom);
+		var cVal = new Vector2(right,	bottom);
+		var dVal = new Vector2(left,	top);
+		var eVal = new Vector2(right,	bottom);
+		var fVal = new Vector2(right,	top);
 
 		uvs[a] = aVal;
 		uvs[b] = bVal;
@@ -73,6 +77,8 @@ public class MapManager : MonoBehaviour
 
 		uvs[d] = dVal;
 		uvs[e] = eVal;
-		uvs[f] = fVal;
+		uvs[f] = fVal; 
 	}
 }
+
+
